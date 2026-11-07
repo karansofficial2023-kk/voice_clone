@@ -1,0 +1,1 @@
+Welcome students! Let us begin our learning journey to explore List Manipulation in Python. Lists are mutable data structures that allow programmers to store and modify multiple elements together.

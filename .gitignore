@@ -41,12 +41,44 @@ tensorboard
 .cache
 compile_commands.json
 
-# train/inference files
+# Audio and large model weight files
 *.wav
 *.m4a
 *.aac
 *.pt
+*.onnx
 pretrained_models/*
 *_pb2_grpc.py
 *_pb2.py
 *.tar
+
+# Whitelist Voices folder so reference clone audios and transcripts are always committed
+!Voices/
+!Voices/*
+!Voices/**/*
+
+# Temporary scratch and debugging scripts
+check_*.py
+diagnose_*.py
+inspect_*.py
+verify_*.py
+test_ratio_fix.py
+test_pure_tamil.py
+test_tags.py
+test_autotag_quality.py
+test_bangalore_voice_2_all_emotions.py
+test_elevenlabs_clones.py
+test_emotions.py
+test_indic_voices_live.py
+test_all_indic_voices_live.py
+test_live_transliteration.py
+test_load_pravega.py
+test_multilingual_indic.py
+test_neeraj_voice.py
+test_ollama_autotag.py
+test_pravega_native_synthesis.py
+test_remaining_voices_emotions.py
+test_samples_tag.py
+emotion_test_results/
+extracted_elevenlabs_voices/
+*.docx

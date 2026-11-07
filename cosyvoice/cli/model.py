@@ -63,12 +63,17 @@ class CosyVoiceModel:
         self.silent_tokens = []
 
     def load(self, llm_model, flow_model, hift_model):
-        self.llm.load_state_dict(torch.load(llm_model, map_location=self.device, weights_only=True), strict=True)
+        llm_state_dict = torch.load(llm_model, map_location=self.device, weights_only=True)
+        llm_state_dict = {k: v for k, v in llm_state_dict.items() if k not in ('epoch', 'step')}
+        self.llm.load_state_dict(llm_state_dict, strict=True)
         self.llm.to(self.device).eval()
-        self.flow.load_state_dict(torch.load(flow_model, map_location=self.device, weights_only=True), strict=True)
+        flow_state_dict = torch.load(flow_model, map_location=self.device, weights_only=True)
+        flow_state_dict = {k: v for k, v in flow_state_dict.items() if k not in ('epoch', 'step')}
+        self.flow.load_state_dict(flow_state_dict, strict=True)
         self.flow.to(self.device).eval()
         # in case hift_model is a hifigan model
         hift_state_dict = {k.replace('generator.', ''): v for k, v in torch.load(hift_model, map_location=self.device, weights_only=True).items()}
+        hift_state_dict = {k: v for k, v in hift_state_dict.items() if k not in ('epoch', 'step')}
         self.hift.load_state_dict(hift_state_dict, strict=True)
         self.hift.to(self.device).eval()
 

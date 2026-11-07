@@ -155,7 +155,10 @@ class TransformerLM(torch.nn.Module):
             ignore_eos: bool = True,
     ):
         if ignore_eos is True:
-            weighted_scores[self.speech_token_size] = -float('inf')
+            if hasattr(self, 'stop_token_ids') and len(self.stop_token_ids) > 0:
+                weighted_scores[self.stop_token_ids] = -float('inf')
+            else:
+                weighted_scores[self.speech_token_size] = -float('inf')
         top_ids = self.sampling(weighted_scores, decoded_tokens, sampling)
         return top_ids
 
@@ -171,7 +174,7 @@ class TransformerLM(torch.nn.Module):
             embedding: torch.Tensor,
             sampling: int = 25,
             max_token_text_ratio: float = 20,
-            min_token_text_ratio: float = 2,
+            min_token_text_ratio: float = 0.2,
             uuid: str = '',
     ) -> Generator[torch.Tensor, None, None]:
         device = text.device
@@ -467,7 +470,7 @@ class Qwen2LM(TransformerLM):
             embedding: torch.Tensor,
             sampling: int = 25,
             max_token_text_ratio: float = 20,
-            min_token_text_ratio: float = 2,
+            min_token_text_ratio: float = 0.2,
             uuid: str = '',
     ) -> Generator[torch.Tensor, None, None]:
         device = text.device
@@ -559,7 +562,7 @@ class Qwen2LM(TransformerLM):
             embedding: torch.Tensor,
             sampling: int = 25,
             max_token_text_ratio: float = 20,
-            min_token_text_ratio: float = 2,
+            min_token_text_ratio: float = 0.2,
     ) -> Generator[torch.Tensor, None, None]:
 
         device = prompt_text.device
