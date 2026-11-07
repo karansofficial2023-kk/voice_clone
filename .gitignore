@@ -79,6 +79,15 @@ test_ollama_autotag.py
 test_pravega_native_synthesis.py
 test_remaining_voices_emotions.py
 test_samples_tag.py
+create_indic_voices.py
+download_pravega.py
+generate_all_emotions_downloads.py
+generate_comprehensive_guide.py
+generate_tripti_poem.py
+install_elevenlabs_voices.py
+requirements_portable.txt
+start_webui.bat
+start_webui.ps1
 emotion_test_results/
 extracted_elevenlabs_voices/
 *.docx
