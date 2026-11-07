@@ -52,3 +52,4 @@ print("\n" + "=" * 65)
 print("🎉 ALL MODELS ARE INSTALLED AND READY!")
 print("Launch WebUI with: python webui.py --port 50000")
 print("=" * 65)
+

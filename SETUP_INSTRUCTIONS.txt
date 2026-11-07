@@ -1,0 +1,137 @@
+================================================================================
+     COSYVOICE 2 & DHEE PRAVEGA-TTS — COMPLETE SETUP & INSTALLATION GUIDE
+================================================================================
+GitHub Repository: https://github.com/karansofficial2023-kk/voice_clone.git
+
+This guide covers everything needed to set up and run the Dual-Engine Voice 
+Cloning platform on any new Windows or Linux PC with an NVIDIA GPU.
+
+--------------------------------------------------------------------------------
+1. SYSTEM & HARDWARE REQUIREMENTS
+--------------------------------------------------------------------------------
+- Operating System : Windows 10/11 (64-bit) or Linux (Ubuntu 20.04/22.04+)
+- GPU              : NVIDIA GPU with at least 6 GB VRAM (RTX 3060, 4060, 3080, 4080, 4090, A100, etc.)
+- CUDA Driver      : NVIDIA driver supporting CUDA 12.1 or newer
+- Disk Space       : At least 15 GB free disk space (for conda env + models)
+- Python Manager   : Miniforge or Miniconda (recommended)
+
+--------------------------------------------------------------------------------
+2. STEP 1: CLONE THE REPOSITORY (WITH SUBMODULES)
+--------------------------------------------------------------------------------
+Open PowerShell, Command Prompt, or Terminal:
+
+    git clone --recursive https://github.com/karansofficial2023-kk/voice_clone.git
+    cd voice_clone
+
+*IMPORTANT*: Always use the `--recursive` flag so that `third_party/Matcha-TTS` 
+is cloned automatically.
+If you already cloned without `--recursive`, run:
+    git submodule update --init --recursive
+
+--------------------------------------------------------------------------------
+3. STEP 2: ENVIRONMENT SETUP
+--------------------------------------------------------------------------------
+
+>>> OPTION A: WINDOWS 1-CLICK SETUP (RECOMMENDED) <<<
+Simply double-click:
+    setup_new_pc.bat
+
+This script will automatically:
+  1. Create the Conda environment: `cosyvoice2` (Python 3.10)
+  2. Install PyTorch with CUDA 12.1 acceleration
+  3. Install all dependencies from `requirements.txt`
+  4. Automatically download both AI models (CosyVoice 2-0.5B + Dhee Pravega-TTS)
+  5. Launch the WebUI on http://localhost:50000
+
+>>> OPTION B: MANUAL SETUP (WINDOWS / LINUX) <<<
+
+1. Open Conda / Miniforge prompt:
+   Install Miniforge from: https://github.com/conda-forge/miniforge/releases
+
+2. Create and activate the Python 3.10 environment:
+   conda create -n cosyvoice2 python=3.10 -y
+   conda activate cosyvoice2
+
+3. Install PyTorch 2.3.1 with CUDA 12.1:
+   pip install torch==2.3.1+cu121 torchaudio==2.3.1+cu121 torchvision==0.18.1+cu121 --index-url https://download.pytorch.org/whl/cu121
+
+4. Install the required Python packages:
+   pip install -r requirements.txt
+
+--------------------------------------------------------------------------------
+4. STEP 3: DOWNLOAD AI PRETRAINED MODELS (1-CLICK)
+--------------------------------------------------------------------------------
+Run the automated model downloader:
+
+    python download_all_models.py
+
+This will download both models directly into the `pretrained_models/` directory:
+  - `pretrained_models/CosyVoice2-0.5B` (via ModelScope or HuggingFace)
+  - `pretrained_models/dhee-pravega-tts` (via HuggingFace dheeyantra/dhee-pravega-tts)
+
+--------------------------------------------------------------------------------
+5. STEP 4: LAUNCH THE WEBUI
+--------------------------------------------------------------------------------
+To launch the WebUI:
+
+    python webui.py --port 50000
+
+Or on Windows, simply double-click:
+    run_webui.bat
+
+Open your web browser and go to:
+    http://localhost:50000 (or http://127.0.0.1:50000)
+
+--------------------------------------------------------------------------------
+6. STEP 5 (OPTIONAL): LOCAL OLLAMA FOR AI AUTO-TAGGING
+--------------------------------------------------------------------------------
+The WebUI includes a `✨ AI Auto-Tag` button that detects emotions and adds 
+expressive tags automatically using a local LLM.
+
+To enable it:
+  1. Download and install Ollama from: https://ollama.ai/
+  2. Open a terminal and run:
+         ollama pull llama3.1:8b
+  3. Keep Ollama running in the background.
+
+*Note*: If Ollama is not installed or running, the WebUI automatically falls 
+back to its built-in heuristic emotion analyzer.
+
+--------------------------------------------------------------------------------
+7. PRE-LOADED CLONED VOICES INCLUDED IN THIS REPO (`Voices/`)
+--------------------------------------------------------------------------------
+The repository comes pre-packaged with 7 high-quality reference voices:
+  - Tamil  : `Tamil - Nila (ElevenLabs Emotional)`
+  - Hindi  : `Hindi - Swara (ElevenLabs Emotional)`
+  - Telugu : `Telugu - Mouni (ElevenLabs Emotional)`
+  - English: `English - Bangalore Lady Voice 1`
+  - English: `English - Bangalore Voice 2`
+  - English: `English - Neeraj Voice`
+  - English: `English - Tripti (Kids Moral & Folk Tale Voice)`
+
+--------------------------------------------------------------------------------
+8. HOW TO ADD YOUR OWN CUSTOM VOICES
+--------------------------------------------------------------------------------
+To add any new voice to the WebUI library:
+  1. Record or obtain a clean 5-15 second reference audio (`.mp3` or `.wav`).
+  2. Create a `.txt` file with the exact same base name containing what was spoken.
+  3. Place both files in the `Voices/` folder:
+         Voices/My_Custom_Voice.mp3
+         Voices/My_Custom_Voice.txt
+  4. In the WebUI, click "🔄 Refresh Voices Library". Your voice will appear 
+     immediately in the dropdown!
+
+--------------------------------------------------------------------------------
+9. HOW THE DUAL ENGINE WORKS
+--------------------------------------------------------------------------------
+- Indic Languages (Tamil, Hindi, Telugu, Kannada, Malayalam, Bengali, etc.):
+  The WebUI automatically detects native Indic script and routes to 
+  **Dhee Pravega-TTS (Local GPU)**. It synthesizes native script directly 
+  without any transliteration or Tanglish.
+- English / Multilingual:
+  The WebUI routes to **CosyVoice 2 (0.5B)** for expressive English cloning 
+  with fine-grained emotional tags like [laughter], [sigh], [breath], and <strong>.
+
+================================================================================
+                          SETUP READY & VERIFIED!
+================================================================================
