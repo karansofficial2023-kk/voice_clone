@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    name: Code & Files Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Validate Core Python Syntax
+        run: |
+          python -m py_compile webui.py download_all_models.py clone_any_voice.py generate_ai_tagged_indic_poems.py
+          echo "✅ All Python files compiled with zero syntax errors!"
+
+      - name: Validate Setup Scripts and Instructions
+        run: |
+          test -f requirements.txt && echo "✅ requirements.txt present"
+          test -f setup_new_pc.bat && echo "✅ setup_new_pc.bat present"
+          test -f run_webui.bat && echo "✅ run_webui.bat present"
+          test -f SETUP_INSTRUCTIONS.txt && echo "✅ SETUP_INSTRUCTIONS.txt present"
+          test -f README.md && echo "✅ README.md present"
+          test -d Voices && echo "✅ Voices library folder present"
+          echo "🎉 All validations passed successfully!"

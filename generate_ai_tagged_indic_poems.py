@@ -51,7 +51,7 @@ for idx, p in enumerate(indic_poems, 1):
     print(f"\n===========================================================")
     print(f"[{idx}/{len(indic_poems)}] {p['lang']} | Voice: {p['voice']}")
     print(f"Original Poem:\n  {p['raw_text']}")
-    
+
     # 1. Select Voice
     print(f"Selecting voice: {p['voice']}...")
     voice_res = client.predict(
@@ -63,7 +63,7 @@ for idx, p in enumerate(indic_poems, 1):
     prompt_text_obj = voice_res[2]
     prompt_text = prompt_text_obj.get("value", "") if isinstance(prompt_text_obj, dict) else str(prompt_text_obj)
     mode = voice_res[3]
-    
+
     # 2. AI Auto-Tag with local Ollama
     print("Calling /on_auto_tag (Ollama llama3.1:8b)...")
     tag_res = client.predict(
@@ -76,7 +76,7 @@ for idx, p in enumerate(indic_poems, 1):
     preset_status = tag_res[2].get("value", "") if isinstance(tag_res[2], dict) else str(tag_res[2])
     print(f"✨ AI Auto-Tagged Text:\n  {tagged_text}")
     print(f"✨ AI Instruction:\n  {instruction}")
-    
+
     # 3. Generate Audio
     print("Synthesizing with Dhee Pravega-TTS (Native Indic Speech Engine)...")
     audio_res = client.predict(
@@ -92,19 +92,19 @@ for idx, p in enumerate(indic_poems, 1):
         speed=1.0,
         api_name="/generate_audio"
     )
-    
+
     # 4. Save to Downloads and Artifacts
     download_path = os.path.join(downloads_dir, p['filename'])
     artifact_path = os.path.join(artifacts_dir, p['filename'])
     shutil.copy2(audio_res, download_path)
     shutil.copy2(audio_res, artifact_path)
-    
+
     file_size_kb = os.path.getsize(download_path) / 1024
     elapsed = time.time() - t0
     print(f"✅ Generated in {elapsed:.2f}s | Size: {file_size_kb:.1f} KB")
     print(f"   📂 Downloads: {download_path}")
     print(f"   🔗 Artifact:  {artifact_path}")
-    
+
     results.append({
         "lang": p['lang'],
         "voice": p['voice'],
